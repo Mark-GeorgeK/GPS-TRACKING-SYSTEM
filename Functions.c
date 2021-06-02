@@ -60,12 +60,12 @@ void SegmentsDisplay(int distance) {
 	uint8_t firstTwo = FirstTwoDigits(distance);
 	uint8_t third = ThirdDigit(distance);
 
-	GPIO_PORTB_DIR_R &= 0;					//Clearing the previous digit displayed
-	GPIO_PORTB_DIR_R |= firstTwo;		//Adding the first two digits on port_B
+	GPIO_PORTB_DATA_R &= 0;					//Clearing the previous digit displayed
+	GPIO_PORTB_DATA_R |= firstTwo;		//Adding the first two digits on port_B
 
-	GPIO_PORTA_DIR_R &= 3;					//Clearing all bits except UART related bits
+	GPIO_PORTA_DATA_R &= 3;					//Clearing all bits except UART related bits
 	third = third<< 4;			//Shifting the third digit to write on bits 7-6-5-4
-	GPIO_PORTA_DIR_R |= third;			
+	GPIO_PORTA_DATA_R |= third;			
 	
 }
 
