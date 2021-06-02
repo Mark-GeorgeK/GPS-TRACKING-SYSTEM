@@ -39,3 +39,19 @@ void Init() {
 	GPIO_PORTB_DIR_R = 0xFF;
 	GPIO_PORTF_DIR_R = 0xE;
 }
+
+//functions for 7 segment display 
+//if number is 348, firstDigit is 8, secondDigit is 4, thirdDigit is 3 
+uint8_t FirstTwoDigits(int distance){
+    uint8_t firstTwoDigits;
+    uint8_t firstDigit = (uint8_t)(distance % 10);
+    uint8_t secondDigit = (uint8_t)((distance/10) %10);
+    firstDigit &= 0x0F;
+    firstTwoDigits = (firstDigit)|(secondDigit << 4);
+    return firstTwoDigits;
+}
+
+uint8_t ThirdDigit(int distance){
+    uint8_t thirdDigit = (uint8_t)(distance/100);
+    return thirdDigit;
+}
