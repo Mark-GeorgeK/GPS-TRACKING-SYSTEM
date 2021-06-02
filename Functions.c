@@ -69,4 +69,18 @@ void SegmentsDisplay(int distance) {
 	
 }
 
+//Function to convert from deg 2 rad,our formula requires working on rads
+float Deg2Rad(float Deg) {
+    return (Deg*(M_PI/180));
+}
 
+//Harvesine Formula for calculating distance between two points
+int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2) {
+	int EarthDiameter=2*6371000; // Diameter of Earth in Meters
+	float Latitude1Rad=Deg2Rad(Latitude1);
+	float Latitude2Rad=Deg2Rad(Latitude2);
+	float Longitude1Rad=Deg2Rad(Longitude1);
+	float Longitude2Rad=Deg2Rad(Longitude2);
+	//formula
+
+}
