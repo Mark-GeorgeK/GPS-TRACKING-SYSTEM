@@ -8,4 +8,4 @@ void Init(void);
 //for 7 segment display
 uint8_t FirstTwoDigits(int distance);
 uint8_t ThirdDigit(int distance);
-void SegmentsDisplay(uint8_t firstTwoDigits, uint8_t thirdDigit);
+void SegmentsDisplay(int distance);

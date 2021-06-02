@@ -56,13 +56,16 @@ uint8_t ThirdDigit(int distance){
     return thirdDigit;
 }
 
-void SegmentsDisplay(uint8_t firstTwoDigits, uint8_t thirdDigit) {
+void SegmentsDisplay(int distance) {
+	uint8_t firstTwo = FirstTwoDigits(distance);
+	uint8_t third = ThirdDigit(distance);
+
 	GPIO_PORTB_DIR_R &= 0;					//Clearing the previous digit displayed
-	GPIO_PORTB_DIR_R |= firstTwoDigits;		//Adding the first two digits on port_B
+	GPIO_PORTB_DIR_R |= firstTwo;		//Adding the first two digits on port_B
 
 	GPIO_PORTA_DIR_R &= 3;					//Clearing all bits except UART related bits
-	thirdDigit = thirdDigit << 4;			//Shifting the third digit to write on bits 7-6-5-4
-	GPIO_PORTA_DIR_R |= thirdDigit;			
+	third = third<< 4;			//Shifting the third digit to write on bits 7-6-5-4
+	GPIO_PORTA_DIR_R |= third;			
 	
 }
 
