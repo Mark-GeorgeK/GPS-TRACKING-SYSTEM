@@ -88,3 +88,22 @@ int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,floa
 	float Distance=EarthDiameter*asinf(squareroot) ;
 	return (int)Distance;
 }
+
+bool DestinationReached(int distance)
+{ if (distance>100)
+    return true;
+    else
+    return false;
+//checks distance state, not needed but a place holder for any further modifications and for readability purposes
+}
+
+void LED_ON(int distance)
+{
+
+if(DestinationReached(distance))
+    
+    GPIO_PORTF_DATA_R |= 0x08; //green
+else
+GPIO_PORTF_DATA_R &=~(0x08);
+//turns on green LED if distance >100
+}

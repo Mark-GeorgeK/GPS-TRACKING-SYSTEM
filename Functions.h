@@ -9,3 +9,7 @@ void Init(void);
 uint8_t FirstTwoDigits(int distance);
 uint8_t ThirdDigit(int distance);
 void SegmentsDisplay(int distance);
+
+//for turning on LED
+void LED_ON(int distance);
+bool DestinationReached(int distance);
