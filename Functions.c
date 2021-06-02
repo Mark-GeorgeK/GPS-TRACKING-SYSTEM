@@ -82,5 +82,9 @@ int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,floa
 	float Longitude1Rad=Deg2Rad(Longitude1);
 	float Longitude2Rad=Deg2Rad(Longitude2);
 	//formula
-
+	float LatitudeDiff=Latitude2Rad-Latitude1Rad;
+	float LongitudeDiff=Longitude2Rad-Longitude1Rad;
+	float squareroot= sqrtf(pow(sin(LatitudeDiff/ 2), 2) + cos(Latitude1Rad)*cos(Latitude2Rad)*pow(sin(LongitudeDiff / 2), 2));
+	float Distance=EarthDiameter*asinf(squareroot) ;
+	return (int)Distance;
 }
