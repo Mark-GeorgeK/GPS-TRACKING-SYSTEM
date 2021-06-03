@@ -23,6 +23,6 @@ int main() {
 
 	//Test case #2: Testing 7 segments functions and Distance functions
 	distance=DistanceBetween2Points(30.064601,31.277308,30.064693,31.277582);
-	void SegmentsDisplay(distance);
+	SegmentsDisplay(distance);
 	while(1){}
 }
