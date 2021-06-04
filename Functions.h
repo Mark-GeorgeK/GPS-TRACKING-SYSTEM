@@ -19,3 +19,7 @@ bool DestinationReached(int distance);
 //for distance calculating
 float Deg2Rad(float Deg);
 int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2);
+
+
+//Delay function
+void delay_1sec(void);

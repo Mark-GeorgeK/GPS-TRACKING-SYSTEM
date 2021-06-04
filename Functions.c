@@ -90,7 +90,7 @@ int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,floa
 }
 
 bool DestinationReached(int distance)
-{ if (distance>100)
+{ if (distance>=100)
     return true;
     else
     return false;
@@ -107,3 +107,10 @@ else
 GPIO_PORTF_DATA_R &=~(0x08);
 //turns on green LED if distance >100
 }
+
+void delay_1sec(void)
+ {
+	 unsigned long i;
+    for( i = 0; i <= 3000000; i++ )
+        {}
+ }
