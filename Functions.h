@@ -5,6 +5,10 @@
 #include <stdbool.h>
 
 #define M_PI 3.142857
+//UART 
+void UART_INIT(void);
+char UART6_Receive(void);
+// Ports
 void Init(void);
 
 //for 7 segment display
