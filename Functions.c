@@ -1,5 +1,31 @@
 #include "Functions.h"
 
+
+void UART_INIT(void)
+{
+    SYSCTL_RCGCUART_R|=0x40;        //Activate UART6 clock PD4-->Rx   PD5-->Tx
+    SYSCTL_RCGCGPIO_R|=0x08;   	// Activate PortD clock
+    UART6_CTL_R &=~0x00000001; 	// Disable UART to start Configuration
+    //	while(!(SYSCTL_PRGPIO_R &0x08)){}
+	//	GPIO_PORTD_LOCK_R=0x4C4F434B;
+	//GPIO_PORTD_CR_R=0xFF;
+	
+    // configuring Baud Rate Divisor
+    UART6_IBRD_R=104;
+    UART6_FBRD_R=11;
+    // Writing on LCRH to activate changes for BDR
+    UART6_LCRH_R=0x00000070;         //8 bits data, 1 stop bit, NO parity bits,FIFO enabled
+    UART6_CTL_R=0x00000001;         //enable UART after Configuration
+    GPIO_PORTD_AFSEL_R|=0x30;       //Alternate Function enabled
+    GPIO_PORTD_DEN_R|=0x30;         //Digital Enabled
+    GPIO_PORTD_PCTL_R|= (GPIO_PORTD_PCTL_R&0xFF00FFFF)+0x00110000;
+    GPIO_PORTD_AMSEL_R&=~0x30;      //Disable analog
+}
+char UART6_Receive(void)
+{
+    while((UART6_FR_R&0x0010)!=0){}
+		return (char)(UART6_DR_R&0xFF);
+}
 void Init() {
 	
 	//ACTIVATING CLOCK FOR THE REQUIRED PORTS A,B AND F
