@@ -22,8 +22,14 @@ bool DestinationReached(int distance);
 
 //for distance calculating
 float Deg2Rad(float Deg);
-int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2);
+float DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2);
 
+//Total Distance functions
+void ShiftInsert(float arr[], float input);
+float Average(float arr[]);
+bool Turned(float arr[],float currentCog);
+bool DegCheck(float arr[]);
+bool Outlier(float currentCog, float inputCog);
 
 //Delay function
 void delay_1sec(void);

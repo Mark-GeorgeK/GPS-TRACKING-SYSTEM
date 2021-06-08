@@ -1,5 +1,21 @@
 #include "Functions.h"
 
+//Global Variables
+
+// float lon[TURNING_INDIC];
+// float lat[TURNING_INDIC];
+// float COG[TURNING_INDIC]; 
+// float total_distance =0;
+// float startingPoint[3];
+// float currentCog =0;
+// float cogRunningSum =0;
+// float cogRunningNum =0;
+// int initialCounter = TURNING_INDIC;
+
+
+
+//Prototypes
+
 
 void UART_INIT(void)
 {
@@ -101,7 +117,7 @@ float Deg2Rad(float Deg) {
 }
 
 //Harvesine Formula for calculating distance between two points
-int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2) {
+float DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,float Longitude2) {
 	int EarthDiameter=2*6371000; // Diameter of Earth in Meters
 	float Latitude1Rad=Deg2Rad(Latitude1);
 	float Latitude2Rad=Deg2Rad(Latitude2);
@@ -112,10 +128,57 @@ int DistanceBetween2Points(float Latitude1,float Longitude1,float Latitude2,floa
 	float LongitudeDiff=Longitude2Rad-Longitude1Rad;
 	float squareroot= sqrtf(pow(sin(LatitudeDiff/ 2), 2) + cos(Latitude1Rad)*cos(Latitude2Rad)*pow(sin(LongitudeDiff / 2), 2));
 	float Distance=EarthDiameter*asinf(squareroot) ;
-	return (int)Distance;
+	return Distance;
 }
 
-bool DestinationReached(int distance)
+
+//Total Distance Functions 
+//tested
+void ShiftInsert(float arr[], float input){
+    int i;
+    for(i = 1; i <TURNING_INDIC;i++){
+        arr[i-1] = arr[i];
+    }
+    arr[TURNING_INDIC-1] = input;
+}
+
+
+//tested
+float Average(float arr[]){
+    float temp =0;
+    int i;
+    for(i =0; i<TURNING_INDIC;i++){
+        temp += arr[i];
+    }
+    temp = temp/TURNING_INDIC;
+    return temp;
+}
+//tested
+bool Turned(float arr[],float currentCog){
+    if(fabs(Average(arr) - currentCog) > 80){  //75 could be modified
+        return true;
+    }
+    return false;
+}
+
+
+bool DegCheck(float arr[]){ //could be implemented with average and stuff
+    int i;
+    for(i = 1;i<TURNING_INDIC-1;i++){
+        if( fabs(arr[i] -arr[i-1]) > 40 )   //tweakable
+            return false;
+    }
+    return true;
+}
+
+bool Outlier(float currentCog, float inputCog){
+    if(fabs(currentCog - inputCog) > 130)
+        return true;
+    return false;
+}
+
+//Destination Reached Condition
+bool DestinationReached(int distance)	//TO BE MODIFIED BY YOUSSEF !!
 { if (distance>=100)
     return true;
     else
