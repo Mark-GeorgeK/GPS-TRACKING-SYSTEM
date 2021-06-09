@@ -11,6 +11,8 @@
 // float cogRunningSum =0;
 // float cogRunningNum =0;
 // int initialCounter = TURNING_INDIC;
+#define NMEA_MAX_LEN 79
+char rawLatitude[13], rawLongitude[13], rawCourse[6];
 
 
 
@@ -189,17 +191,91 @@ bool DestinationReached(int distance)	//TO BE MODIFIED BY YOUSSEF !!
 void LED_ON(int distance)
 {
 
-if(DestinationReached(distance))
-    
-    GPIO_PORTF_DATA_R |= 0x08; //green
-else
-GPIO_PORTF_DATA_R &=~(0x08);
-//turns on green LED if distance >100
+    if(DestinationReached(distance))
+        
+        GPIO_PORTF_DATA_R |= 0x08; //green
+    else
+    GPIO_PORTF_DATA_R &=~(0x08);
+    //turns on green LED if distance >100
 }
 
-void delay_1sec(void)
- {
+void delay_1sec(void) 
+{
 	 unsigned long i;
     for( i = 0; i <= 3000000; i++ )
         {}
- }
+}
+
+//reading data from GPS
+// getting GPRMC sentence to get latitude and longitude and course over land
+bool GPSread(void){
+    bool GPScheck = false;
+    bool GPRMCflag= true;
+    bool fix = false;
+    int i,j;
+    char* str;
+    char* GPRMC_ = "$GPRMC";
+    char c;
+    int term =0;
+    while(!GPScheck){
+        //getting NMEA sentences ---> to be added by mark
+    
+        //checking if NMEA sentence is GPRMC
+        for(i= 0; i < 6; i++){
+            if(str[i] != GPRMC_[i]){
+                GPRMCflag = false;
+                break;
+            }
+        }
+        GPScheck = GPRMCflag;
+    
+        //storing (raw) latitude, longitude, course over ground data in arrays
+        if(GPRMCflag){
+            for(i = 0; i <strlen(str); i++){
+                if(str[i]== ','){
+                    term++;
+                }
+                if(term == 2){
+                    if(str[i] =='A'){
+                        fix = true;
+                    }
+                }
+                if(term == 3){
+                    for( j = 1; j<13; j++){
+                        rawLatitude[j] = str[i];
+                        i++;
+                    }
+                }
+                if(term == 4){
+                    if(str[i] == 'N')
+                    rawLatitude[0] = '0';
+                    else
+                    rawLatitude[0] = '-';
+                
+                }
+                if(term == 5){
+                    for( j = 1; j<13; j++){
+                        rawLongitude[j] = str[i];
+                        i++;
+                    }
+                }
+                if(term == 6){
+                    if(str[i] == 'E')
+                    rawLongitude[0] = '0';
+                    else
+                    rawLongitude[0] = '-';
+                }
+                if(term == 8){
+                    for(j=0; j<5; j++){
+                        rawCourse[j] = str[i];
+                        i++;
+                    }
+                }
+
+            }
+        }
+    
+    
+    }
+    return GPScheck;
+}

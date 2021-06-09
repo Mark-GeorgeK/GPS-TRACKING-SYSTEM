@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h> 
 #include <stdbool.h>
+#include <string.h>
 
 #define M_PI 3.142857
 //UART 
@@ -33,3 +34,6 @@ bool Outlier(float currentCog, float inputCog);
 
 //Delay function
 void delay_1sec(void);
+
+//reading gps data
+bool GPSread(void);
