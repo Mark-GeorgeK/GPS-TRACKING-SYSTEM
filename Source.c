@@ -26,7 +26,7 @@ int main() {
 	while(!fix){}
 	GPIO_PORTF_DATA_R |= 0x02;
 
-	while(GPIO_PORTF_DATA_R & 0x00){}	//To be checked by MARK whether it's negative logic or
+	while(GPIO_PORTF_DATA_R & 0x01){}	//To be checked by MARK whether it's negative logic or
 	GPIO_PORTF_DATA_R &= ~(0x02);
 	GPIO_PORTF_DATA_R |= 0x08;
 
