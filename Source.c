@@ -20,6 +20,31 @@ int main() {
 	LCD_INIT();
 
 	//Print Hello
+int main(void) {
+    int i;
+    LCD_INIT();
+    LCD_CMD(0X30);  //wake up
+    msdelay(50);
+    LCD_CMD(0X38);  //8-bit bus mode, 2 line display mode, 5x8 dots display mode
+    msdelay(50);
+    LCD_CMD(0X01);  //clear display
+    msdelay(50);
+    LCD_CMD(0X0F);  //turn on display
+    msdelay(50);
+    LCD_CMD(0X80);  //first row
+    LCD_display("Hello User..");
+    msdelay(1000);
+    LCD_CMD(0X01);
+    msdelay(250);
+    LCD_display("Distance=");
+    msdelay(200);
+
+    //test distance
+    for(i=0; i<20; i++){
+        PRINT_DISTANCE(i);
+    }
+}
+
 
 	//Gps call
 	GPSread();

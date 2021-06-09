@@ -44,3 +44,13 @@ float parse_rawDegree(char* term);
 float Latitude(void);
 float Longitude(void);
 float CourseLand(void);
+
+void msdelay(int n);
+void microdelay(int n);
+void LCD_INIT(void);
+void LCD_CMD (unsigned char cmd);
+void LCD_WRITE_DATA (unsigned char data);
+void LCD_display(unsigned char *str);
+void Cursor_pos(unsigned char x_pos, unsigned char y_pos);
+void PRINT_DISTANCE(int distance);
+unsigned char* TO_ASCII(int n,unsigned char* arr);
