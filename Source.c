@@ -20,9 +20,8 @@ int main() {
 	LCD_INIT();
 
 	//Print Hello
-int main(void) {
-    int i;
-    LCD_INIT();
+
+    
     LCD_CMD(0X30);  //wake up
     msdelay(50);
     LCD_CMD(0X38);  //8-bit bus mode, 2 line display mode, 5x8 dots display mode
@@ -39,10 +38,8 @@ int main(void) {
     LCD_display("Distance=");
     msdelay(200);
 
-    //test distance
-    for(i=0; i<20; i++){
-        PRINT_DISTANCE(i);
-    }
+    
+    
 }
 
 

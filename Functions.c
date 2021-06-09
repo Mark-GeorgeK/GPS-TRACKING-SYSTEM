@@ -302,46 +302,57 @@ float CourseLand(){
 	return (float)atof(rawCourse);
 }
 
-void SystemInit(){}
-
-unsigned char* TO_ASCII(int n,unsigned char* arr) {
-    arr[2] = n % 10 + 48;
-    n /= 10;
-    arr[1] = n % 10 + 48;
-    n /= 10;
-    arr[0] = n + 48;
-    return arr;
+void Cursor_pos(unsigned char x_pos, unsigned char y_pos){
+    uint8_t Address =0;
+    if (x_pos ==0)
+        Address = 0x80;
+    else if (x_pos ==1)
+        Address = 0xC0;
+    if( y_pos <16)
+        Address += y_pos;
+    LCD_CMD(Address); //check
 }
 
-void PRINT_DISTANCE(int distance){
-    unsigned char arr[3] = {0,0,0};
-    Cursor_pos(0,10);
-    TO_ASCII(distance, arr);
-    LCD_display(arr);
-    msdelay(250);
+
+/* delay in milliseconds */
+void msdelay(int n) {
+     int i,j;
+     for(i=0;i<n;i++)
+     for(j=0;j<3180;j++){}
 }
 
-//INITIALIZING PORTS
-void LCD_INIT(void) {
-    SYSCTL_RCGCGPIO_R |= 0x02 ; // Initialize clocks for ports A and B
-    while( (SYSCTL_PRGPIO_R & 0x02) == 0 ) {}
-    //volatile unsigned long delay;
-    //SYSCTL_RCGC2_R |= 0X00000002;   // allow the clock for portB
-    //delay = SYSCTL_RCGC2_R;     // short delay for clock
-    GPIO_PORTB_AFSEL_R &= ~0xFF;
-    GPIO_PORTB_AMSEL_R &= ~0XFF;
-    GPIO_PORTB_PCTL_R &= ~0XFF;
-    GPIO_PORTB_DIR_R  |= 0XFF;      //set the direction of PB0-7 as output
-    GPIO_PORTB_DEN_R  |= 0XFF;
+/* delay in microseconds */
+void microdelay(int n) {
+     int i,j;
+     for(i=0;i<n;i++)
+     for(j=0;j<3;j++){}
+}
 
+//LCD COMMAND
+void LCD_CMD (unsigned char cmd) {
+  LCD_RS = 0x00;  //set PA7 register select pin to command
+  LCD_RW = 0x00;  //set PA5 r/w pin to write
+  GPIO_PORTB_DATA_R = cmd;    //set PB7-0 as the passed command to the function
 
-    SYSCTL_RCGCGPIO_R |= 0x01 ; // Initialize clocks for ports A and B
-    while( (SYSCTL_PRGPIO_R & 0x01) == 0 ) {}
-    //SYSCTL_RCGC2_R |= 0X00000001;   // allow the clock for PA5,6,7
-    //delay = SYSCTL_RCGC2_R;     // short delay for clock
-    GPIO_PORTA_AFSEL_R &= ~0xE0;    //disable alternative functions for PA5,6,7
-    GPIO_PORTA_AMSEL_R &= ~0XE0;    //disable analog function for PA5,6,7
-    GPIO_PORTA_PCTL_R &= ~0XE0;     //regular digital pins
-    GPIO_PORTA_DIR_R |= 0XE0;       //set the direction of PA5,6,7 as output
-    GPIO_PORTA_DEN_R |= 0XE0;       //enable digital PA5,6,7
+  LCD_EN = 0x40;  //E pin to 1
+  msdelay(50);
+  LCD_EN = 0x00;  //E pin to 0
+}
+
+//LCD write data
+void LCD_WRITE_DATA (unsigned char data) {
+    LCD_RS = 0x80;  //set PA7 to data
+    LCD_RW = 0x00;  //set pA5 to
+    GPIO_PORTB_DATA_R = data;   //write data to PB7-0
+    LCD_EN = 0x40;  //E pin to 1
+    msdelay(50);
+    LCD_EN = 0x00;  //E pin to 0
+}
+
+void LCD_display(unsigned char *str) {
+    int i;
+    for(i = 0; str[i] != '\0'; i++) {
+        LCD_WRITE_DATA(str[i]);
+        msdelay(50);
+    }
 }

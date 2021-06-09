@@ -49,12 +49,31 @@ float Latitude(void);
 float Longitude(void);
 float CourseLand(void);
 
+//LCD functions
+
+//delay in milli seconds
 void msdelay(int n);
+
+//delay in micro seconds
 void microdelay(int n);
+
+//LCD initializations
 void LCD_INIT(void);
+
+//sending commands to lcd
 void LCD_CMD (unsigned char cmd);
+
+//writing data to lcd
 void LCD_WRITE_DATA (unsigned char data);
+
+//displaying string on lcd
 void LCD_display(unsigned char *str);
+
+//determining the cursor position
 void Cursor_pos(unsigned char x_pos, unsigned char y_pos);
+
+//printing distance
 void PRINT_DISTANCE(int distance);
+
+//converting integer to ASCII
 unsigned char* TO_ASCII(int n,unsigned char* arr);
