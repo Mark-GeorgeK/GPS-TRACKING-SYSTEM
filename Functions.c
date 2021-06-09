@@ -218,8 +218,13 @@ bool GPSread(void){
     char c;
     int term =0;
     while(!GPScheck){
-        //getting NMEA sentences ---> to be added by mark
-    
+        //getting NMEA sentences
+				for(i= 0; i < NMEA_MAX_LEN; i++){
+						c= UART6_Receive();
+						str[i] = c;
+						if(c == '\n' || c == '\r') break;
+				}
+				
         //checking if NMEA sentence is GPRMC
         for(i= 0; i < 6; i++){
             if(str[i] != GPRMC_[i]){
@@ -278,4 +283,21 @@ bool GPSread(void){
     
     }
     return GPScheck;
+}
+//lat and long from char* to float (degrees)
+float parse_rawDegree(char* term) {
+  float val = (float)atof(term)/100;
+  int16_t dec = (int16_t)val;
+  val -= dec;
+  val  = val * 100/60 + dec;
+  return val;
+}
+float Latitude() {
+  return parse_rawDegree(rawLatitude);
+}
+float Longitude() {
+  return parse_rawDegree(rawLongitude);
+}
+float CourseLand(){
+	return (float)atof(rawCourse);
 }

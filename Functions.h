@@ -4,6 +4,7 @@
 #include <math.h> 
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define M_PI 3.142857
 //UART 
@@ -37,3 +38,9 @@ void delay_1sec(void);
 
 //reading gps data
 bool GPSread(void);
+
+//lat and long from char* to float (degrees)
+float parse_rawDegree(char* term);
+float Latitude(void);
+float Longitude(void);
+float CourseLand(void);
