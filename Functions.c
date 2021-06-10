@@ -33,7 +33,7 @@ void UART_INIT(void)
     UART6_FBRD_R=11;
     // Writing on LCRH to activate changes for BDR
     UART6_LCRH_R=0x00000070;         //8 bits data, 1 stop bit, NO parity bits,FIFO enabled
-    UART6_CTL_R=0x00000001;         //enable UART after Configuration
+    UART6_CTL_R=0x00000301;         //enable UART after Configuration
     GPIO_PORTD_AFSEL_R|=0x30;       //Alternate Function enabled
     GPIO_PORTD_DEN_R|=0x30;         //Digital Enabled
     GPIO_PORTD_PCTL_R|= (GPIO_PORTD_PCTL_R&0xFF00FFFF)+0x00110000;
