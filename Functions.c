@@ -302,6 +302,50 @@ float CourseLand(){
 	return (float)atof(rawCourse);
 }
 
+void SystemInit(){}
+
+unsigned char* TO_ASCII(int n,unsigned char* arr) {
+    arr[2] = n % 10 + 48;
+    n /= 10;
+    arr[1] = n % 10 + 48;
+    n /= 10;
+    arr[0] = n + 48;
+    return arr;
+}
+
+//INITIALIZING PORTS
+void LCD_INIT(void) {
+    SYSCTL_RCGCGPIO_R |= 0x02 ; // Initialize clocks for ports A and B
+    while( (SYSCTL_PRGPIO_R & 0x02) == 0 ) {}
+    //volatile unsigned long delay;
+    //SYSCTL_RCGC2_R |= 0X00000002;   // allow the clock for portB
+    //delay = SYSCTL_RCGC2_R;     // short delay for clock
+    GPIO_PORTB_AFSEL_R &= ~0xFF;
+    GPIO_PORTB_AMSEL_R &= ~0XFF;
+    GPIO_PORTB_PCTL_R &= ~0XFF;
+    GPIO_PORTB_DIR_R  |= 0XFF;      //set the direction of PB0-7 as output
+    GPIO_PORTB_DEN_R  |= 0XFF;
+
+
+    SYSCTL_RCGCGPIO_R |= 0x01 ; // Initialize clocks for ports A and B
+    while( (SYSCTL_PRGPIO_R & 0x01) == 0 ) {}
+    //SYSCTL_RCGC2_R |= 0X00000001;   // allow the clock for PA5,6,7
+    //delay = SYSCTL_RCGC2_R;     // short delay for clock
+    GPIO_PORTA_AFSEL_R &= ~0xE0;    //disable alternative functions for PA5,6,7
+    GPIO_PORTA_AMSEL_R &= ~0XE0;    //disable analog function for PA5,6,7
+    GPIO_PORTA_PCTL_R &= ~0XE0;     //regular digital pins
+    GPIO_PORTA_DIR_R |= 0XE0;       //set the direction of PA5,6,7 as output
+    GPIO_PORTA_DEN_R |= 0XE0;       //enable digital PA5,6,7
+}
+
+void PRINT_DISTANCE(int distance){
+    unsigned char arr[3] = {0,0,0};
+    Cursor_pos(0,10);
+    TO_ASCII(distance, arr);
+    LCD_display(arr);
+    msdelay(250);
+}
+
 void Cursor_pos(unsigned char x_pos, unsigned char y_pos){
     uint8_t Address =0;
     if (x_pos ==0)
