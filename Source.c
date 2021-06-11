@@ -33,7 +33,7 @@ int main() {
     LCD_CMD(0X80);  //first row
     LCD_display("Hello User..");
     msdelay(1000);
-    LCD_CMD(0X01);
+    LCD_CMD(0X01);				//Youssef <- Delete this
     msdelay(250);
     LCD_display("Distance=");
     msdelay(200);
@@ -53,7 +53,7 @@ int main() {
 	GPIO_PORTF_DATA_R |= 0x08;
 
 	//Loop
-	
+	//Youssef <- Add First Distance Display here
 		
 		
 		while(initialCounter--){
@@ -88,14 +88,16 @@ int main() {
 				startingPoint[0] = lat[0];
 				startingPoint[1] = lon[0];
 				startingPoint[2] = COG[0];
-				//LCD Displays "TURNED"
-				//LCD updates distance
+				//Youssef<- LCD Displays "TURNED" for a brief delay
+				//Youssef <- Second Distance Display here
 
 
 			}
 		}
 		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]]);
-	
+		//Youssef <- Third Distance Display here
+		
+
 
 	//Test case #1: Testing 7 segments functions and LED_ON functions
 	//  while(!DestinationReached(distance)){
