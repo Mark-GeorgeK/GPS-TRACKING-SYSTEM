@@ -1,19 +1,14 @@
 #include "Functions.h"
 
-#define TURNING_INDIC 7  //To be changed by Mario after practical trial
+//#define TURNING_INDIC 7  //To be changed by Mario after practical trial
 
 //Global Variables
-float lon[TURNING_INDIC];
-float lat[TURNING_INDIC];
-float COG[TURNING_INDIC]; 
-float total_distance =0;
-float startingPoint[3];
-float currentCog =0;
-float cogRunningSum =0;
-float cogRunningNum =0;
-int initialCounter = TURNING_INDIC;
+float distance =0;
+
 
 int main() {
+	float latitude1, longitude1, latitude2, longitude2;
+	
 	//Initialization
 	Init();			//TO BE MODIFIED BY MARK
 	UART_INIT();
@@ -37,87 +32,40 @@ int main() {
     msdelay(250);
     
 
-    
-    
-}
 
 
 	//Gps call
 	GPSread();
 	while(!fix){}
-	GPIO_PORTF_DATA_R |= 0x02;
+	GPIO_PORTF_DATA_R |= 0x02; //light red when fix is set
 
 	while(GPIO_PORTF_DATA_R & 0x01){}	//To be checked by MARK whether it's negative logic or
-	GPIO_PORTF_DATA_R &= ~(0x02);
-	GPIO_PORTF_DATA_R |= 0x08;
+	GPIO_PORTF_DATA_R &= ~(0x02); // red led off when turned on
+	GPIO_PORTF_DATA_R |= 0x04; //blue led on 
+	LCD_display("Distance=");
+    msdelay(200);
+	PRINT_DISTANCE((int)distance);
 
-	//Loop
-	//Youssef <- Add First Distance Display here
-        LCD_display("Distance=");
-        msdelay(200);
-		 PRINT_DISTANCE(distance);
+	GPSread();
+	latitude1= Latitude();
+	longitude1= Longitude();
+	
+	while(!DestinationReached){
 		
-		while(initialCounter--){
-			//scanf("%f", &COG[TURNING_INDIC-initialCounter-1]); //cin longs and lats
-			GPSread();
-			lon[TURNING_INDIC-initialCounter-1] = longtitude();
-			lat[TURNING_INDIC-initialCounter-1] = latitude();
-			COG[TURNING_INDIC-initialCounter-1] = CourseLand();
-			
-			// cogRunningSum += COG[TURNING_INDIC-initialCounter-1]; //Remove
-			// cogRunningNum++;
-			if(initialCounter +1 ==TURNING_INDIC){
-				startingPoint[0] = lat[0];
-				startingPoint[1] = lon[0];
-				startingPoint[2] = COG[0];
-				
-			}
- 	   }
-		currentCog = Average(COG);
+		GPSread();
+		latitude2 = Latitude();
+		longitude2 = Longitude();
 
-		while(!DestinationReached){
-			GPSread();
-			 if(Outlier(currentCog, CourseLand() ) )
-            	continue;
+		distance+= DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2);
 
-	        ShiftInsert(lon, longtitude() );
-	        ShiftInsert(lat, latitude() );
-	        ShiftInsert(COG, CourseLand() );
-
-	        if(Turned(COG,currentCog)&&DegCheck(COG)){
-				total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[0],lon[0]);	//Store point previous to it?
-				startingPoint[0] = lat[0];
-				startingPoint[1] = lon[0];
-				startingPoint[2] = COG[0];
-				//Youssef<- LCD Displays "TURNED" for a brief delay
-				//Youssef <- Second Distance Display here
-				 PRINT_DISTANCE(distance);
-                LCD_CMD(0XC0);  //force cursor to 2nd row
-				 msdelay(30);
-				LCD_display("TURNED");
-				msdelay(30);
-				LCD_CMD(0XC0);   
-				msdelay(30);
-				LCD_display("      ");  //unsure if this will clear second row as there is no direct function to do so except clear the whole display
-				                        
-
-			}
-		}
-		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]]);
-		//Youssef <- Third Distance Display here
-		PRINT_DISTANCE(distance);
+		LCD_display("Distance=");
+		msdelay(200);
+		PRINT_DISTANCE((int)distance);
+		latitude1= latitude2;
+		longitude1= longitude2;
+	}
+	
 
 
-	//Test case #1: Testing 7 segments functions and LED_ON functions
-	//  while(!DestinationReached(distance)){
-	//  	distance++;
-	//  	SegmentsDisplay(distance);
-	//    LED_ON(distance);
-	//  	delay_1sec();
-	//  }
-
-	//Test case #2: Testing 7 segments functions and Distance functions
-	//distance=DistanceBetween2Points(30.064601,31.277308,30.064693,31.277582);
-	//SegmentsDisplay(distance);
 	while(1){}
 }
