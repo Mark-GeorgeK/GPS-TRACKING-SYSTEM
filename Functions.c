@@ -12,6 +12,7 @@
 // float cogRunningNum =0;
 // int initialCounter = TURNING_INDIC;
 #define NMEA_MAX_LEN 79
+bool fix = false;
 char rawLatitude[13], rawLongitude[13], rawCourse[6];
 
 
@@ -211,7 +212,7 @@ void delay_1sec(void)
 bool GPSread(void){
     bool GPScheck = false;
     bool GPRMCflag= true;
-    bool fix = false;
+    
     int i,j;
     char* str;
     char* GPRMC_ = "$GPRMC";
