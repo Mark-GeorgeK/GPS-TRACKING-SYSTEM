@@ -32,11 +32,10 @@ int main() {
     msdelay(50);
     LCD_CMD(0X80);  //first row
     LCD_display("Hello User..");
-    msdelay(1000);
+    msdelay(700);
     LCD_CMD(0X01);				//Youssef <- Delete this
     msdelay(250);
-    LCD_display("Distance=");
-    msdelay(200);
+    
 
     
     
@@ -54,7 +53,9 @@ int main() {
 
 	//Loop
 	//Youssef <- Add First Distance Display here
-		
+        LCD_display("Distance=");
+        msdelay(200);
+		 PRINT_DISTANCE(distance);
 		
 		while(initialCounter--){
 			//scanf("%f", &COG[TURNING_INDIC-initialCounter-1]); //cin longs and lats
@@ -90,13 +91,21 @@ int main() {
 				startingPoint[2] = COG[0];
 				//Youssef<- LCD Displays "TURNED" for a brief delay
 				//Youssef <- Second Distance Display here
-
+				 PRINT_DISTANCE(distance);
+                LCD_CMD(0XC0);  //force cursor to 2nd row
+				 msdelay(30);
+				LCD_display("TURNED");
+				msdelay(30);
+				LCD_CMD(0XC0);   
+				msdelay(30);
+				LCD_display("      ");  //unsure if this will clear second row as there is no direct function to do so except clear the whole display
+				                        
 
 			}
 		}
 		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]]);
 		//Youssef <- Third Distance Display here
-		
+		PRINT_DISTANCE(distance);
 
 
 	//Test case #1: Testing 7 segments functions and LED_ON functions

@@ -180,23 +180,23 @@ bool Outlier(float currentCog, float inputCog){
 }
 
 //Destination Reached Condition
-bool DestinationReached(int distance)	//TO BE MODIFIED BY YOUSSEF !!
-{ if (distance>=100)
+bool DestinationReached()	//TO BE MODIFIED BY YOUSSEF !!
+{ if (GPIO_PORTF_DATA_R & 0x10) //if switch 2 is pressed
     return true;
     else
     return false;
 //checks distance state, not needed but a place holder for any further modifications and for readability purposes
 }
 
-void LED_ON(int distance)
+void LED_ON()
 {
 
-    if(DestinationReached(distance))
+    if(DestinationReached==true)
         
         GPIO_PORTF_DATA_R |= 0x08; //green
     else
     GPIO_PORTF_DATA_R &=~(0x08);
-    //turns on green LED if distance >100
+    //turns on green LED if switch 2 is pressed
 }
 
 void delay_1sec(void) 
