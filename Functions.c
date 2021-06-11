@@ -180,7 +180,7 @@ bool Outlier(float currentCog, float inputCog){
 }
 
 //Destination Reached Condition
-bool DestinationReached()	//TO BE MODIFIED BY YOUSSEF !!
+bool DestinationReached()	//MODIFIED 
 { if (GPIO_PORTF_DATA_R & 0x10) //if switch 2 is pressed
     return true;
     else
