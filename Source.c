@@ -55,7 +55,7 @@ int main() {
 	//done Add First Distance Display 
         LCD_display("Distance=");
         msdelay(200);
-		 PRINT_DISTANCE(distance);
+		 PRINT_DISTANCE(total_distance);
 		
 		while(initialCounter--){
 			//scanf("%f", &COG[TURNING_INDIC-initialCounter-1]); //cin longs and lats
@@ -91,7 +91,7 @@ int main() {
 				startingPoint[2] = COG[0];
 				//done LCD Displays "TURNED" for a brief delay
 				//done Second Distance Display
-				 PRINT_DISTANCE(distance);
+				 PRINT_DISTANCE(total_distance);
                 LCD_CMD(0XC0);  //force cursor to 2nd row
 				 msdelay(30);
 				LCD_display("TURNED");
@@ -105,7 +105,7 @@ int main() {
 		}
 		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]]);
 		//done Third Distance Display 
-		PRINT_DISTANCE(distance);
+		PRINT_DISTANCE(total_distance);
 
 
 	//Test case #1: Testing 7 segments functions and LED_ON functions
