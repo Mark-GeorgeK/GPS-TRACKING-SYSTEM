@@ -20,28 +20,30 @@
 
 void UART_INIT(void)
 {
-    SYSCTL_RCGCUART_R|=0x40;        //Activate UART6 clock PD4-->Rx   PD5-->Tx
-    SYSCTL_RCGCGPIO_R|=0x08;   	// Activate PortD clock
-    UART6_CTL_R &=~0x00000001; 	// Disable UART to start Configuration
-    //	while(!(SYSCTL_PRGPIO_R &0x08)){}
-	//	GPIO_PORTD_LOCK_R=0x4C4F434B;
-	//GPIO_PORTD_CR_R=0xFF;
-	
+
+
+	SYSCTL_RCGCUART_R|=0x04;        //Activate UART6 clock PD4-->Rx   PD5-->Tx
+	SYSCTL_RCGCGPIO_R|=0x08;   	// Activate PortD clock
+    	while(!(SYSCTL_PRGPIO_R &0x08)){}
+	GPIO_PORTD_LOCK_R=0x4C4F434B; //Port D should be unlocked for PD7
+	GPIO_PORTD_CR_R=0xFF;
+	UART2_CTL_R &=~0x00000001; 	// Disable UART to start Configuration
+    
     // configuring Baud Rate Divisor
-    UART6_IBRD_R=104;
-    UART6_FBRD_R=11;
+    UART2_IBRD_R=104;
+    UART2_FBRD_R=11;
     // Writing on LCRH to activate changes for BDR
-    UART6_LCRH_R=0x00000070;         //8 bits data, 1 stop bit, NO parity bits,FIFO enabled
-    UART6_CTL_R=0x00000301;         //enable UART after Configuration
-    GPIO_PORTD_AFSEL_R|=0x30;       //Alternate Function enabled
-    GPIO_PORTD_DEN_R|=0x30;         //Digital Enabled
-    GPIO_PORTD_PCTL_R|= (GPIO_PORTD_PCTL_R&0xFF00FFFF)+0x00110000;
-    GPIO_PORTD_AMSEL_R&=~0x30;      //Disable analog
+    UART2_LCRH_R=0x00000070;         //8 bits data, 1 stop bit, NO parity bits,FIFO enabled
+    UART2_CTL_R=0x00000301;         //enable UART after Configuration
+    GPIO_PORTD_AFSEL_R|=0xC0;       //Alternate Function enabled
+    GPIO_PORTD_DEN_R|=0xC0;         //Digital Enabled
+    GPIO_PORTD_PCTL_R|= (GPIO_PORTD_PCTL_R&0x00FFFFFF)+0x11000000;
+    GPIO_PORTD_AMSEL_R&=~0xC0;      //Disable analog
 }
 char UART6_Receive(void)
 {
-    while((UART6_FR_R&0x0010)!=0){}
-		return (char)(UART6_DR_R&0xFF);
+    while((UART2_FR_R&0x0010)!=0){}
+		return (char)(UART2_DR_R&0xFF);
 }
 void Init() {
 	
