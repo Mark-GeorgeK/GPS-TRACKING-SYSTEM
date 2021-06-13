@@ -4,14 +4,16 @@
 
 // float lon[TURNING_INDIC];
 // float lat[TURNING_INDIC];
-// float COG[TURNING_INDIC]; 
-// float total_distance =0;
-// float startingPoint[3];
-// float currentCog =0;
-// float cogRunningSum =0;
-// float cogRunningNum =0;
-// int initialCounter = TURNING_INDIC;
+#define TURNING_INDIC 7
+#define NMEA_MAX_LEN 79
 
+
+
+float cogRunningSum =0;
+float cogRunningNum =0;
+
+
+char rawLatitude[13], rawLongitude[13], rawCourse[6];
 
 
 
@@ -43,7 +45,7 @@ void UART_INIT(void)
 char UART6_Receive(void)
 {
     while((UART2_FR_R&0x0010)!=0){}
-		return (char)(UART2_DR_R&0xFF);
+		return (char)(UART2_DR_R);
 }
 void Init() {
 	
@@ -196,7 +198,7 @@ bool DestinationReached()	//MODIFIED
 void LED_ON()
 {
 
-    if(DestinationReached==true)
+    if(DestinationReached() )
         
         GPIO_PORTF_DATA_R |= 0x08; //green
     else
@@ -214,6 +216,7 @@ void delay_1sec(void)
 //reading data from GPS
 // getting GPRMC sentence to get latitude and longitude and course over land
 bool GPSread(void){
+		bool fix = false;
     bool GPScheck = false;
     bool GPRMCflag= true;
     
@@ -287,7 +290,7 @@ bool GPSread(void){
     
     
     }
-    return GPScheck;
+    return fix;
 }
 //lat and long from char* to float (degrees)
 float parse_rawDegree(char* term) {
@@ -298,10 +301,10 @@ float parse_rawDegree(char* term) {
   return val;
 }
 float Latitude() {
-  return parse_rawDegree(rawLatitude);
+  return (float)parse_rawDegree(rawLatitude);
 }
 float Longitude() {
-  return parse_rawDegree(rawLongitude);
+  return (float)parse_rawDegree(rawLongitude);
 }
 float CourseLand(){
 	return (float)atof(rawCourse);
@@ -343,12 +346,14 @@ void LCD_INIT(void) {
     GPIO_PORTA_DEN_R |= 0XE0;       //enable digital PA5,6,7
 }
 
+
 void PRINT_DISTANCE(int distance){
     unsigned char arr[3] = {0,0,0};
     Cursor_pos(0,10);
     TO_ASCII(distance, arr);
     LCD_display(arr);
-    msdelay(250);
+    //
+		msdelay(250);
 }
 
 void Cursor_pos(unsigned char x_pos, unsigned char y_pos){

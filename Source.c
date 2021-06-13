@@ -1,32 +1,37 @@
 #include "Functions.h"
 
 #define TURNING_INDIC 7  //To be changed by Mario after practical trial
-#define NMEA_MAX_LEN 79
 //Global Variables
+//float lon[TURNING_INDIC];
+//float lat[TURNING_INDIC];
+//float COG[TURNING_INDIC]; 
+//float total_distance =0;
+//float startingPoint[3];
+//float currentCog =0;
+//float cogRunningSum =0;
+//float cogRunningNum =0;
+
+
+//bool fix = false;
+//char rawLatitude[13], rawLongitude[13], rawCourse[6];
+int initialCounter = TURNING_INDIC;
+float total_distance =0;
 float lon[TURNING_INDIC];
 float lat[TURNING_INDIC];
-float COG[TURNING_INDIC]; 
-float total_distance =0;
+float COG[TURNING_INDIC];
 float startingPoint[3];
 float currentCog =0;
-float cogRunningSum =0;
-float cogRunningNum =0;
-int initialCounter = TURNING_INDIC;
-
-bool fix = false;
-char rawLatitude[13], rawLongitude[13], rawCourse[6];
-
 int main() {
 	//Initialization
 	Init();			//TO BE MODIFIED BY MARK
-	UART_INIT();
+	UART_INIT(); 
 	LCD_INIT();
 
 	//Print Hello
 
     
     LCD_CMD(0X30);  //wake up
-    msdelay(50);
+	msdelay(50);
     LCD_CMD(0X38);  //8-bit bus mode, 2 line display mode, 5x8 dots display mode
     msdelay(50);
     LCD_CMD(0X01);  //clear display
@@ -42,13 +47,13 @@ int main() {
 
     
     
-}
+
 
 
 	//Gps call
-	GPSread();
-	while(!fix){}
-	GPIO_PORTF_DATA_R |= 0x02;
+	
+//	while(!GPSread()){}
+//	GPIO_PORTF_DATA_R |= 0x02;
 
 	while(GPIO_PORTF_DATA_R & 0x01){}	//To be checked by MARK whether it's negative logic or
 	GPIO_PORTF_DATA_R &= ~(0x02);
@@ -57,14 +62,16 @@ int main() {
 	//Loop
 	//done Add First Distance Display 
         LCD_display("Distance=");
+
         msdelay(200);
 		 PRINT_DISTANCE((int)total_distance);
 		
 		while(initialCounter--){
 			//scanf("%f", &COG[TURNING_INDIC-initialCounter-1]); //cin longs and lats
 			GPSread();
-			lon[TURNING_INDIC-initialCounter-1] = longtitude();
-			lat[TURNING_INDIC-initialCounter-1] = latitude();
+
+			lon[TURNING_INDIC-initialCounter-1] = Longitude();
+			lat[TURNING_INDIC-initialCounter-1] = Latitude();
 			COG[TURNING_INDIC-initialCounter-1] = CourseLand();
 			
 			// cogRunningSum += COG[TURNING_INDIC-initialCounter-1]; //Remove
@@ -73,18 +80,18 @@ int main() {
 				startingPoint[0] = lat[0];
 				startingPoint[1] = lon[0];
 				startingPoint[2] = COG[0];
-				
+
 			}
  	   }
 		currentCog = Average(COG);
 
-		while(!DestinationReached){
+		while(!DestinationReached()){
 			GPSread();
 			 if(Outlier(currentCog, CourseLand() ) )
             	continue;
 
-	        ShiftInsert(lon, longtitude() );
-	        ShiftInsert(lat, latitude() );
+	        ShiftInsert(lon, Longitude() );
+	        ShiftInsert(lat, Latitude() );
 	        ShiftInsert(COG, CourseLand() );
 
 	        if(Turned(COG,currentCog)&&DegCheck(COG)){
@@ -96,17 +103,17 @@ int main() {
 				//done Second Distance Display
 				 PRINT_DISTANCE((int)total_distance);
                 LCD_CMD(0XC0);  //force cursor to 2nd row
-				 msdelay(30);
+				msdelay(30);
 				LCD_display("TURNED");
 				msdelay(30);
 				LCD_CMD(0XC0);   
 				msdelay(30);
 				LCD_display("      ");  //unsure if this will clear second row as there is no direct function to do so except clear the whole display
 				                        
-
+				msdelay(2000);
 			}
 		}
-		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]]);
+		total_distance += DistanceBetween2Points(startingPoint[0], startingPoint[1],lat[TURNING_INDIC-1],lon[TURNING_INDIC-1]);
 		//done Third Distance Display 
 		PRINT_DISTANCE((int)total_distance);
 

@@ -10,7 +10,13 @@
 #define LCD_EN  (*((volatile unsigned long *)0x40004100))   //PA.6 for enable pin
 #define LCD_RW  (*((volatile unsigned long *)0x40004080))   //PA.5 for rw pin
 
+
 #define M_PI 3.142857
+#define TURNING_INDIC 7
+
+
+
+
 //UART 
 void UART_INIT(void);
 char UART6_Receive(void);
@@ -23,8 +29,8 @@ uint8_t ThirdDigit(int distance);
 void SegmentsDisplay(int distance);
 
 //for turning on LED
-void LED_ON(int distance);
-bool DestinationReached(int distance);
+void LED_ON(void);
+bool DestinationReached(void);
 
 //for distance calculating
 float Deg2Rad(float Deg);
