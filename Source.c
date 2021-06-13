@@ -62,15 +62,17 @@ int main() {
         msdelay(200);
         PRINT_DISTANCE((int)total_distance);
 
-        GPSread();
-        latitude1= Latitude();
-        longitude1= Longitude();
-
+        do{
+            GPSread();
+            latitude1= Latitude();
+            longitude1= Longitude();
+        } while((int)latitude1!=30||(int)longitude1!=31);
         while(DestinationReached()){
             msdelay(5000);
             GPSread();
             latitude2 = Latitude();
             longitude2 = Longitude();
+            if( (int)latitude2!=30 || (int)longitude2!=31 ){continue;}
 
             total_distance+= fabs(DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2));
 
