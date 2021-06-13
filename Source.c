@@ -72,7 +72,7 @@ int main() {
             latitude2 = Latitude();
             longitude2 = Longitude();
 
-            total_distance+= DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2);
+            total_distance+= fabs(DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2));
 
 //            LCD_display("Distance=");
 //            msdelay(200);
