@@ -5,7 +5,7 @@
 // float lon[TURNING_INDIC];
 // float lat[TURNING_INDIC];
 #define TURNING_INDIC 7
-#define NMEA_MAX_LEN 79
+#define NMEA_MAX_LEN 81
 
 
 
@@ -216,22 +216,27 @@ void delay_1sec(void)
 //reading data from GPS
 // getting GPRMC sentence to get latitude and longitude and course over land
 bool GPSread(void){
-		bool fix = false;
+    int v =0;
+	char d;
+	//bool fix = false;
     bool GPScheck = false;
     bool GPRMCflag= true;
     
     int i,j;
-    char* str;
-    char* GPRMC_ = "$GPRMC";
+    char str[NMEA_MAX_LEN];
+    char GPRMC_[] = "$GPRMC";
     char c;
     int term =0;
     while(!GPScheck){
+        GPRMCflag = true;
         //getting NMEA sentences
-				for(i= 0; i < NMEA_MAX_LEN; i++){
-						c= UART6_Receive();
-						str[i] = c;
-						if(c == '\n' || c == '\r') break;
-				}
+		for (i = 0; i < NMEA_MAX_LEN; i++){
+			c = UART6_Receive();
+			if (c == '\n')
+				break;
+			str[i] = c;
+			
+		}
 				
         //checking if NMEA sentence is GPRMC
         for(i= 0; i < 6; i++){
@@ -248,49 +253,67 @@ bool GPSread(void){
                 if(str[i]== ','){
                     term++;
                 }
-                if(term == 2){
-                    if(str[i] =='A'){
-                        fix = true;
-                    }
-                }
+                // if(term == 2){
+                //     if(str[i] =='A'){
+                //         fix = true;
+                //     }
+                // }
                 if(term == 3){
-                    for( j = 1; j<13; j++){
-                        rawLatitude[j] = str[i];
-                        i++;
-                    }
+                    v=i+1;
+                    for (j = 0; j < 12; j++){
+						d = str[v++];
+						if (d != ',')
+							rawLatitude[j] = d;
+						else{
+							term++;
+							i = v;
+							break;
+						}
+						
+					}
+                    
                 }
-                if(term == 4){
-                    if(str[i] == 'N')
-                    rawLatitude[0] = '0';
-                    else
-                    rawLatitude[0] = '-';
+                // if(term == 4){
+                //     if(str[i] == 'N')
+                //     rawLatitude[0] = '0';
+                //     else
+                //     rawLatitude[0] = '-';
                 
-                }
+                // }
                 if(term == 5){
-                    for( j = 1; j<13; j++){
-                        rawLongitude[j] = str[i];
-                        i++;
-                    }
+                    v = i+1;
+					for (j = 0; j < 12; j++)
+					{
+						d = str[v++];
+						if (d != ',')
+							rawLongitude[j] = d;
+						else {
+							i = v;
+							term++;
+							break;
+						}
+						
+					}
                 }
-                if(term == 6){
-                    if(str[i] == 'E')
-                    rawLongitude[0] = '0';
-                    else
-                    rawLongitude[0] = '-';
-                }
-                if(term == 8){
-                    for(j=0; j<5; j++){
-                        rawCourse[j] = str[i];
-                        i++;
-                    }
-                }
+                // if(term == 6){
+                //     if(str[i] == 'E')
+                //     rawLongitude[0] = '0';
+                //     else
+                //     rawLongitude[0] = '-';
+                // }
+                // if(term == 8){
+                //     for(j=0; j<5; j++){
+                //         rawCourse[j] = str[i];
+                //         i++;
+                //     }
+                // }
 
             }
         }
     
     
     }
-    return fix;
+    return GPScheck;
 }
 //lat and long from char* to float (degrees)
 float parse_rawDegree(char* term) {
