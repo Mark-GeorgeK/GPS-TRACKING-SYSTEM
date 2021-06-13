@@ -89,6 +89,8 @@ void Init() {
 	// GPIO_PORTA_DIR_R = 0xFC;
 	// GPIO_PORTB_DIR_R = 0xFF;
 	GPIO_PORTF_DIR_R = 0xE;
+
+	// PUR
 }
 
 //functions for 7 segment display 
@@ -188,7 +190,7 @@ bool Outlier(float currentCog, float inputCog){
 
 //Destination Reached Condition
 bool DestinationReached()	//MODIFIED 
-{ if (GPIO_PORTF_DATA_R & 0x10) //if switch 2 is pressed
+{ if (GPIO_PORTF_DATA_R & 0x01) //if switch 2 is pressed
     return true;
     else
     return false;
@@ -198,7 +200,7 @@ bool DestinationReached()	//MODIFIED
 void LED_ON()
 {
 
-    if(DestinationReached() )
+    if(!DestinationReached() )
         
         GPIO_PORTF_DATA_R |= 0x08; //green
     else
@@ -336,11 +338,16 @@ float CourseLand(){
 // void SystemInit(){}
 
 unsigned char* TO_ASCII(int n,unsigned char* arr) {
+		int zeroi =0;
+		if(n<100)
+			zeroi =1;
     arr[2] = n % 10 + 48;
     n /= 10;
     arr[1] = n % 10 + 48;
     n /= 10;
     arr[0] = n + 48;
+		if(zeroi)
+			arr[0] =48;
     return arr;
 }
 

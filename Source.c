@@ -66,13 +66,13 @@ int main() {
         latitude1= Latitude();
         longitude1= Longitude();
 
-        while(!DestinationReached()){
+        while(DestinationReached()){
             msdelay(5000);
             GPSread();
             latitude2 = Latitude();
             longitude2 = Longitude();
 
-            total_distance+= DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2);
+            total_distance+= fabs(DistanceBetween2Points(latitude1,longitude1,latitude2,longitude2));
 
 //            LCD_display("Distance=");
 //            msdelay(200);
@@ -82,7 +82,7 @@ int main() {
         }
 
 
-
+        LED_ON();
         while(1){}
 //	Init();			//TO BE MODIFIED BY MARK
 //	UART_INIT();
