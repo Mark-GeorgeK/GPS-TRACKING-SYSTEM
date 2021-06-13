@@ -11,7 +11,7 @@
 #define LCD_RW  (*((volatile unsigned long *)0x40004080))   //PA.5 for rw pin
 
 
-#define M_PI 3.142857
+//#define M_PI 3.142857
 #define TURNING_INDIC 7
 
 
@@ -74,6 +74,7 @@ void LCD_WRITE_DATA (unsigned char data);
 
 //displaying string on lcd
 void LCD_display(unsigned char *str);
+void Greeting(unsigned char *str);
 
 //determining the cursor position
 void Cursor_pos(unsigned char x_pos, unsigned char y_pos);

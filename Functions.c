@@ -122,7 +122,7 @@ void SegmentsDisplay(int distance) {
 
 //Function to convert from deg 2 rad,our formula requires working on rads
 float Deg2Rad(float Deg) {
-    return (Deg*(M_PI/180));
+    return (Deg*(3.142857/180));
 }
 
 //Harvesine Formula for calculating distance between two points
@@ -375,8 +375,7 @@ void PRINT_DISTANCE(int distance){
     Cursor_pos(0,10);
     TO_ASCII(distance, arr);
     LCD_display(arr);
-    //
-		msdelay(250);
+    msdelay(250);
 }
 
 void Cursor_pos(unsigned char x_pos, unsigned char y_pos){
@@ -427,6 +426,14 @@ void LCD_WRITE_DATA (unsigned char data) {
 }
 
 void LCD_display(unsigned char *str) {
+    int i;
+    for(i = 0; i<3; i++) {
+        LCD_WRITE_DATA(str[i]);
+        msdelay(50);
+    }
+}
+
+void Greeting(unsigned char *str) {
     int i;
     for(i = 0; str[i] != '\0'; i++) {
         LCD_WRITE_DATA(str[i]);
