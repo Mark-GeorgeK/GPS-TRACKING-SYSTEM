@@ -336,16 +336,11 @@ float CourseLand(){
 // void SystemInit(){}
 
 unsigned char* TO_ASCII(int n,unsigned char* arr) {
-		int zeroi =0;
-		if(n<100)
-			zeroi =1;
     arr[2] = n % 10 + 48;
     n /= 10;
     arr[1] = n % 10 + 48;
     n /= 10;
     arr[0] = n + 48;
-		if(zeroi)
-			arr[0] =48;
     return arr;
 }
 
