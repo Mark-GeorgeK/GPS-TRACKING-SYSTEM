@@ -9,17 +9,13 @@
 #define LCD_RS  (*((volatile unsigned long *)0x40004200))    //PA.7 for register select pin
 #define LCD_EN  (*((volatile unsigned long *)0x40004100))   //PA.6 for enable pin
 #define LCD_RW  (*((volatile unsigned long *)0x40004080))   //PA.5 for rw pin
-
-
-//#define M_PI 3.142857
 #define TURNING_INDIC 7
-
-
-
+//#define M_PI 3.142857
 
 //UART 
 void UART_INIT(void);
 char UART6_Receive(void);
+
 // Ports
 void Init(void);
 
